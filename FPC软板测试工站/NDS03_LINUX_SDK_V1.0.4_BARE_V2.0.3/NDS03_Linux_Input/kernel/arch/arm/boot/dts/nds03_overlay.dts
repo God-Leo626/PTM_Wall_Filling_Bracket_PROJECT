@@ -1,0 +1,33 @@
+/* 
+    #define 	IRQF_TRIGGER_NONE   0x00000000
+    #define 	IRQF_TRIGGER_RISING   0x00000001
+    #define 	IRQF_TRIGGER_FALLING   0x00000002
+    #define 	IRQF_TRIGGER_HIGH   0x00000004
+    #define 	IRQF_TRIGGER_LOW   0x00000008
+ */
+
+/dts-v1/;
+/plugin/;
+
+/ {
+    fragment@0 {
+        target = <&i2c1>;
+        __overlay__ {
+            clock-frequency = <400000>;
+            status = "okay";
+            #address-cells = <0x1>;
+            #size-cells = <0x0>;
+
+            tof_nds03: tof_nds03@5c {
+                compatible = "nx,tof_nds03";
+                reg = <0x5c>;
+                nds03_poll_interval = <1000>; // polling interval(mSEC)
+                intr-gpios = <&gpio 17 0>; 
+                interrupt-parent = <&gpio>;
+                interrupts = <17 0x00000002>; //IRQF_TRIGGER_FALLING
+                //xshut pin configuration
+                xshut-gpios = <&gpio 4 0>; 
+            };
+        };
+    };
+};
